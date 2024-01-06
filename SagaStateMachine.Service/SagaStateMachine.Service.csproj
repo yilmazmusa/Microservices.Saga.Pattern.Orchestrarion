@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>dotnet-SagaStateMachine.Service-42bfb96a-0df0-4cb7-a70d-bb613f048c47</UserSecretsId>
+    <UserSecretsId>dotnet-SagaStateMachine.Service-bb53f2cf-9646-47f4-8f41-821e671bffc4</UserSecretsId>
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
   </PropertyGroup>
 
