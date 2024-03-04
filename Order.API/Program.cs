@@ -1,5 +1,9 @@
-
+﻿
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer;
+using Order.API.Context;
+using Order.API.ViewModels;
 
 namespace Order.API
 {
@@ -24,6 +28,9 @@ namespace Order.API
                 });
             });
 
+            //Aşağıda diyoruz ki sen contex olarak OrderDbContext i kullanacaksın diyoruz.Yani OrderDbContext i ıugulamaya servis olarak ekliyoruz.
+            builder.Services.AddDbContext<OrderDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("MSSQLServer")));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -32,6 +39,27 @@ namespace Order.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.MapPost("/create-order", async (CreateOrderVM model, OrderDbContext context) =>
+            {
+                Order.API.Models.Order order = new()
+                {
+                    BuyerId = model.BuyerId,
+                    CreatedDate = DateTime.Now,
+                    OrderStatus = Enums.OrderStatus.Suspend,
+                    TotalPrice = model.OrderItems.Sum(oi => oi.Price * oi.Count),
+                    OrderItems = model.OrderItems.Select(oi => new Order.API.Models.OrderItem
+                    {
+                        ProductId = oi.ProductId,
+                        ProductName = oi.ProductName,
+                        Price = oi.Price,
+                        Count = oi.Count
+                    }).ToList(),
+
+                };
+                await context.Orders.AddAsync(order);
+                await context.SaveChangesAsync();
+            });
 
             app.UseHttpsRedirection();
 
