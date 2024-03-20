@@ -8,14 +8,13 @@ using System.Threading.Tasks;
 
 namespace Shared.StockEvents
 {
-    public class PaymentStartedEvent : CorrelatedBy<Guid>
+    public class StockNotReservedEvent : CorrelatedBy<Guid>
     {
-        public Guid CorrelationId { get; }
-        public PaymentStartedEvent(Guid correlationId)
+        public StockNotReservedEvent(Guid correlationId)
         {
             CorrelationId = correlationId;
         }
-        public decimal TotalPrice { get; set; }
-        public List<OrderItemMessage> OrderItems { get; set; }
+        public Guid CorrelationId { get; }
+        public string Message { get; set; }
     }
 }
