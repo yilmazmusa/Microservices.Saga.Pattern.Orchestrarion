@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SagaStateMachine.Service.StateDBContext;
 using SagaStateMachine.Service.StateInstances;
 using SagaStateMachine.Service.StateMachine;
+using Shared.Settings;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -21,6 +22,8 @@ builder.Services.AddMassTransit(configurator =>
     configurator.UsingRabbitMq((context, _configure) =>
     {
         _configure.Host(builder.Configuration["RabbitMQ"]);
+
+        _configure.ReceiveEndpoint(RabbitMQSettings.StateMachineQueue, e => e.ConfigureSaga<OrderStateInstance>(context));
 
     });
 });
